@@ -62,8 +62,8 @@ export class Client {
         throw new TypeError(
           "rpcUrl is required when server parameter is not provided",
         );
-      const serverOpts: Server.Options = { allowHttp };
-      server = new Server(rpcUrl!, serverOpts);
+      const serverOpts= { allowHttp };
+      server = new Server(rpcUrl, serverOpts);
     }
     const spec = await specFromWasmHash(wasmHash, server, format);
 
