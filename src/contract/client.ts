@@ -55,18 +55,16 @@ export class Client {
       simulate,
       ...clientOptions
     } = options;
-    let server: Server =
-      clientOptions.server ??
-      (() => {
-        const { rpcUrl, allowHttp } = options;
-        if (!rpcUrl)
-          throw new TypeError(
-            "rpcUrl is required when server parameter is not provided",
-          );
-        const serverOpts: Server.Options = { allowHttp };
-        return new Server(rpcUrl!, serverOpts);
-      })();
-
+    let server = clientOptions.server;
+    if (!server) {
+      const { rpcUrl, allowHttp } = options;
+      if (!rpcUrl)
+        throw new TypeError(
+          "rpcUrl is required when server parameter is not provided",
+        );
+      const serverOpts: Server.Options = { allowHttp };
+      server = new Server(rpcUrl!, serverOpts);
+    }
     const spec = await specFromWasmHash(wasmHash, server, format);
 
     const operation = Operation.createCustomContract({

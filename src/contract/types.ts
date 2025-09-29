@@ -126,30 +126,11 @@ export type SignAuthEntry = (
   } & { error?: WalletError }
 >;
 
-export type ClientRpcOptions = {
-  /**
-   * The instance of the RPC client that will be used to interact with this
-   * contract.
-   */
-  server?: RpcServer;
-  /**
-   * The URL of the RPC instance that will be used to interact with this
-   * contract.
-   */
-  rpcUrl?: string;
-  /**
-   * If true, will allow HTTP requests to the Soroban network. If false, will
-   * only allow HTTPS requests.
-   * @default false
-   */
-  allowHttp?: boolean;
-};
-
 /**
  * Options for a smart contract client.
  * @memberof module:contract
  */
-export type ClientOptions = ClientRpcOptions & {
+export type ClientOptions = {
   /**
    * The public key of the account that will send this transaction. You can
    * override this for specific methods later, like
@@ -185,6 +166,22 @@ export type ClientOptions = ClientRpcOptions & {
    * to.
    */
   networkPassphrase: string;
+  /**
+   * The instance of the RPC client that will be used to interact with this
+   * contract. If defined, `rpcUrl` and `allowHttp` will be ignored.
+   */
+  server?: RpcServer;
+  /**
+   * The URL of the RPC instance that will be used to interact with this
+   * contract.
+   */
+  rpcUrl?: string;
+  /**
+   * If true, will allow HTTP requests to the Soroban network. If false, will
+   * only allow HTTPS requests. Only if `server` is not defined.
+   * @default false
+   */
+  allowHttp?: boolean;
 
   /**
    * This gets filled in automatically from the ContractSpec when you

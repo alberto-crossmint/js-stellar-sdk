@@ -451,15 +451,13 @@ export class AssembledTransaction<T> {
     this.options.simulate = this.options.simulate ?? true;
     if (options.server) {
       this.server = options.server;
-      return;
-    }
-    if (options.rpcUrl) {
+    } else if (options.rpcUrl) {
       this.server = new Server(options.rpcUrl, {
         allowHttp: this.options.allowHttp ?? false,
       });
-      return;
+    } else {
+      throw new Error("No server or RPC URL provided");
     }
-    throw new Error("No server or RPC URL provided");
   }
 
   /**
