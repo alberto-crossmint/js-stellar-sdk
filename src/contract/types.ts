@@ -8,6 +8,7 @@ import {
   xdr,
 } from "@stellar/stellar-base";
 import type { Client } from "./client";
+import { RpcServer } from "../rpc/server";
 
 export type XDR_BASE64 = string;
 /**
@@ -125,11 +126,30 @@ export type SignAuthEntry = (
   } & { error?: WalletError }
 >;
 
+export type ClientRpcOptions = {
+  /**
+   * The instance of the RPC client that will be used to interact with this
+   * contract.
+   */
+  server?: RpcServer;
+  /**
+   * The URL of the RPC instance that will be used to interact with this
+   * contract.
+   */
+  rpcUrl?: string;
+  /**
+   * If true, will allow HTTP requests to the Soroban network. If false, will
+   * only allow HTTPS requests.
+   * @default false
+   */
+  allowHttp?: boolean;
+};
+
 /**
  * Options for a smart contract client.
  * @memberof module:contract
  */
-export type ClientOptions = {
+export type ClientOptions = ClientRpcOptions & {
   /**
    * The public key of the account that will send this transaction. You can
    * override this for specific methods later, like
@@ -165,17 +185,7 @@ export type ClientOptions = {
    * to.
    */
   networkPassphrase: string;
-  /**
-   * The URL of the RPC instance that will be used to interact with this
-   * contract.
-   */
-  rpcUrl: string;
-  /**
-   * If true, will allow HTTP requests to the Soroban network. If false, will
-   * only allow HTTPS requests.
-   * @default false
-   */
-  allowHttp?: boolean;
+
   /**
    * This gets filled in automatically from the ContractSpec when you
    * instantiate a {@link Client}.
