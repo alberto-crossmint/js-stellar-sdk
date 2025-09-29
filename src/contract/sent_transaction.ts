@@ -57,9 +57,7 @@ export class SentTransaction<T> {
   };
 
   constructor(public assembled: AssembledTransaction<T>) {
-    this.server = new Server(this.assembled.options.rpcUrl, {
-      allowHttp: this.assembled.options.allowHttp ?? false,
-    });
+    this.server = this.assembled.server;
   }
 
   /**

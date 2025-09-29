@@ -299,7 +299,7 @@ export class AssembledTransaction<T> {
    * The Soroban server to use for all RPC calls. This is constructed from the
    * `rpcUrl` in the options.
    */
-  private server: Server;
+  public server: Server;
 
   /**
    * The signed transaction.
@@ -449,9 +449,15 @@ export class AssembledTransaction<T> {
 
   private constructor(public options: AssembledTransactionOptions<T>) {
     this.options.simulate = this.options.simulate ?? true;
-    this.server = new Server(this.options.rpcUrl, {
-      allowHttp: this.options.allowHttp ?? false,
-    });
+    if (options.server) {
+      this.server = options.server;
+    } else if (options.rpcUrl) {
+      this.server = new Server(options.rpcUrl, {
+        allowHttp: this.options.allowHttp ?? false,
+      });
+    } else {
+      throw new Error("No server or RPC URL provided");
+    }
   }
 
   /**

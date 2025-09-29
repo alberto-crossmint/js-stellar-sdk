@@ -8,6 +8,7 @@ import {
   xdr,
 } from "@stellar/stellar-base";
 import type { Client } from "./client";
+import { RpcServer } from "../rpc/server";
 
 export type XDR_BASE64 = string;
 /**
@@ -166,16 +167,22 @@ export type ClientOptions = {
    */
   networkPassphrase: string;
   /**
+   * The instance of the RPC client that will be used to interact with this
+   * contract. If defined, `rpcUrl` and `allowHttp` will be ignored.
+   */
+  server?: RpcServer;
+  /**
    * The URL of the RPC instance that will be used to interact with this
    * contract.
    */
-  rpcUrl: string;
+  rpcUrl?: string;
   /**
    * If true, will allow HTTP requests to the Soroban network. If false, will
-   * only allow HTTPS requests.
+   * only allow HTTPS requests. Only if `server` is not defined.
    * @default false
    */
   allowHttp?: boolean;
+
   /**
    * This gets filled in automatically from the ContractSpec when you
    * instantiate a {@link Client}.

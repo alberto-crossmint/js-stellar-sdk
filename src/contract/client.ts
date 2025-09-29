@@ -8,15 +8,9 @@ const CONSTRUCTOR_FUNC = "__constructor";
 
 async function specFromWasmHash(
   wasmHash: Buffer | string,
-  options: Server.Options & { rpcUrl: string },
+  server: Server,
   format: "hex" | "base64" = "hex",
 ): Promise<Spec> {
-  if (!options || !options.rpcUrl) {
-    throw new TypeError("options must contain rpcUrl");
-  }
-  const { rpcUrl, allowHttp } = options;
-  const serverOpts: Server.Options = { allowHttp };
-  const server = new Server(rpcUrl, serverOpts);
   const wasm = await server.getContractWasmByHash(wasmHash, format);
   return Spec.fromWasm(wasm);
 }
@@ -61,7 +55,17 @@ export class Client {
       simulate,
       ...clientOptions
     } = options;
-    const spec = await specFromWasmHash(wasmHash, clientOptions, format);
+    let server = clientOptions.server;
+    if (!server) {
+      const { rpcUrl, allowHttp } = options;
+      if (!rpcUrl)
+        throw new TypeError(
+          "rpcUrl is required when server parameter is not provided",
+        );
+      const serverOpts: Server.Options = { allowHttp };
+      server = new Server(rpcUrl!, serverOpts);
+    }
+    const spec = await specFromWasmHash(wasmHash, server, format);
 
     const operation = Operation.createCustomContract({
       address: new Address(options.address || options.publicKey!),
